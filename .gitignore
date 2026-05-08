@@ -1,0 +1,25 @@
+# Variáveis de ambiente — NUNCA commitar
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Django
+staticfiles/
+media/
+db.sqlite3
+
+# Docker
+*.log
+
+# Editores
+.vscode/
+.idea/
+*.swp
