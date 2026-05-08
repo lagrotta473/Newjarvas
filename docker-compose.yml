@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: sgq_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: sgq_user
+      POSTGRES_PASSWORD: sgq_password
+      POSTGRES_DB: sgq_database
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: sgq_n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_DATABASE=sgq_database
+      - DB_POSTGRESDB_HOST=db
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_USER=sgq_user
+      - DB_POSTGRESDB_PASSWORD=sgq_password
+    depends_on:
+      - db
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  # O serviço Django será ativado futuramente
+  # backend:
+  #   build: ./app
+  #   container_name: sgq_django
+  #   command: python manage.py runserver 0.0.0.0:8000
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - db
+
+volumes:
+  pgdata:
+  n8n_data:
